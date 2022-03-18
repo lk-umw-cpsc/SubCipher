@@ -126,8 +126,8 @@ public class MainFrame extends JFrame {
         // process running, which is bad practice unless you need to catch
         // the user pressing the close button, i.e. for saving purposes)
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Prevent the user from resizing the window (try uncommenting this)
-        // setResizable(false);
+        // Prevent the user from resizing the window (try commenting this out)
+        setResizable(false);
 
         // Resize the window so it can fit all of its child components
         pack();
