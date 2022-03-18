@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
     public void createAndShow() {
         // Main panel will lay its children out horizontally (left to right)
         Box pane = Box.createHorizontalBox();
-        // The next paint is our "main" pane; horizontal layers will be added to it
+        // The next pane is our "main" pane; horizontal layers will be added to it
         // This panel lays its children out vertically
         Box layeredPane = Box.createVerticalBox();
         // Center-align layeredPane by adding horizontal glue before
