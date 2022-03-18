@@ -1,8 +1,5 @@
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -76,6 +73,7 @@ public class Cipher {
         for (char letter = 'a'; letter <= 'z'; letter++) {
             characterSet.add(letter);
         }
+
         String cipher = "";
         for (char letter = 'a'; letter <= 'x'; letter++) {
             if (characterSet.contains(letter)) {
@@ -92,11 +90,14 @@ public class Cipher {
                 characterSet.remove(pick);
             }
         }
+
         if (characterSet.contains('y')) {
+            // z gets y, y gets the other
             characterSet.remove('y');
             cipher += characterSet.toArray()[0];
             cipher += 'y';
         } else if (characterSet.contains('z')) {
+            // y gets z, z gets the other
             characterSet.remove('z');
             cipher += 'z';
             cipher += characterSet.toArray()[0];
@@ -104,6 +105,7 @@ public class Cipher {
             Object[] remaining = characterSet.toArray();
             int randomIndex = rng.nextInt(remaining.length);
             Object pick = remaining[randomIndex];
+            // y gets the pick, z gets the other
             cipher += pick;
             cipher += remaining[(randomIndex + 1) % 2];
         }
