@@ -11,17 +11,21 @@ import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
 
+    // Text fields
     private JTextField cipherField;
     private JTextField plaintextField;
     private JTextField ciphertextField;
 
+    // Buttons
     private JButton generateButton;
     private JButton encryptButton;
     private JButton decryptButton;
 
+    // Error message layer (displays when invalid cipher is given)
     private Box invalidCipherLayer;
 
     public MainFrame() {
+        // Set window title
         super("Sub Cipher by Lauren");
     }
 
@@ -144,7 +148,9 @@ public class MainFrame extends JFrame {
     }
 
     private void generatePressed(ActionEvent e) {
+        // Generate a new cipher and place it in the cipher field
         cipherField.setText(Cipher.generate());
+        // Hide the invalid cipher error message if it's currently showing
         if (invalidCipherLayer.isVisible()) {
             invalidCipherLayer.setVisible(false);
             pack();
@@ -152,6 +158,8 @@ public class MainFrame extends JFrame {
     }
 
     private void encryptPressed(ActionEvent e) {
+        // Attempt to encrypt; if an invalid cipher is given,
+        // display an error message instead.
         Cipher cipher;
         try {
             cipher = new Cipher(cipherField.getText());
@@ -162,14 +170,18 @@ public class MainFrame extends JFrame {
             }
             return;
         }
+        // Encryption was successful. Hide the invalid cipher field if visible
         if (invalidCipherLayer.isVisible()) {
             invalidCipherLayer.setVisible(false);
             pack();
         }
+        // Place the output in the ciphertextfield
         ciphertextField.setText(cipher.encrypt(plaintextField.getText()));
     }
 
     private void decryptPressed(ActionEvent e) {
+        // Attempt to decrypt; if an invalid cypher is given,
+        // display an error message instead
         Cipher cipher;
         try {
             cipher = new Cipher(cipherField.getText());
@@ -179,10 +191,13 @@ public class MainFrame extends JFrame {
                 pack();
             }            return;
         }
+        // Decryption was successful; hide the invalid cipher error message
+        // if it's showing
         if (invalidCipherLayer.isVisible()) {
             invalidCipherLayer.setVisible(false);
             pack();
         }
+        // Place output in the plaintext field
         plaintextField.setText(cipher.decrypt(ciphertextField.getText()));
     }
     
