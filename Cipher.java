@@ -4,6 +4,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * A Cipher object allows for encryption and decryption using a 
+ * substitution cipher. The Cipher.generate() method can be used to
+ * generate a randomized substitution cipher string which can be
+ * passed to the Cipher constructor.
+ */
 public class Cipher {
     private static final Random rng = new Random();
 
