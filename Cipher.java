@@ -19,7 +19,7 @@ public class Cipher {
 
         for (int i = 0, length = cipher.length(); i < length; i++) {
             char c = cipher.charAt(i);
-            if (!(Character.isAlphabetic(c) && Character.isLowerCase(c))) {
+            if (!(c >= 'a' && c <= 'z')) {
                 throw new IllegalArgumentException("Expected only lower case letters");
             }
             if (decryptMap.containsKey(c)) {
