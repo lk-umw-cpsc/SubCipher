@@ -3,7 +3,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,6 +28,10 @@ public class MainFrame extends JFrame {
         super("Sub Cipher by Lauren");
     }
 
+    /**
+     * Builds this MainFrame's children, centers the frame on the screen,
+     * and makes the frame visible.
+     */
     public void createAndShow() {
         // Main panel will lay its children out horizontally (left to right)
         Box pane = Box.createHorizontalBox();
@@ -61,10 +64,10 @@ public class MainFrame extends JFrame {
             layeredPane.add(layer);
 
             layer = invalidCipherLayer = Box.createHorizontalBox();
-            layer.add(new JLabel("Please enter a valid cipher"));
+            JLabel errorLabel = new JLabel("Please enter a valid cipher");
+            errorLabel.setForeground(Color.RED);
+            layer.add(errorLabel);
             layer.add(Box.createHorizontalGlue());
-            layer.setBackground(Color.ORANGE);
-            layer.setBorder(new LineBorder(Color.RED));
             layer.setVisible(false);
             layeredPane.add(layer);
             
