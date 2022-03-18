@@ -16,6 +16,13 @@ public class Cipher {
     private Map<Character, Character> encryptMap;
     private Map<Character, Character> decryptMap;
 
+    /**
+     * Creates a new Cipher object with the given character mapping.
+     * Each letter of the alphabet must be present in the string, otherwise
+     * an IllegalArgumentException is thrown.
+     * @param cipher A String containing all 26 letters of the alphabet.
+     * The first character substitutes a, the second substitutes b, and so on.
+     */
     public Cipher(String cipher) {
         encryptMap = new HashMap<>();
         decryptMap = new HashMap<>();
@@ -38,6 +45,11 @@ public class Cipher {
         }
     }
 
+    /**
+     * Encrypts a given plaintext string into cypher text using this Cipher
+     * @param plaintext The string to encrypt
+     * @return The resulting ciphertext string
+     */
     public String encrypt(String plaintext) {
         String ciphertext = "";
         for (int i = 0, length = plaintext.length(); i < length; i++) {
@@ -56,6 +68,11 @@ public class Cipher {
         return ciphertext;
     }
 
+    /**
+     * Decrypts ciphertext into plaintext using the given cipher
+     * @param ciphertext The ciphertext to decrypt
+     * @return The resulting plaintext string
+     */
     public String decrypt(String ciphertext) {
         String plaintext = "";
         for (int i = 0, length = ciphertext.length(); i < length; i++) {
@@ -75,12 +92,15 @@ public class Cipher {
     }
     
     public static String generate() {
+        // Add each lower case letter of the alphabet to a set
         Set<Character> characterSet = new HashSet<>();
         for (char letter = 'a'; letter <= 'z'; letter++) {
             characterSet.add(letter);
         }
-
+        // Start with an empty string
         String cipher = "";
+        // Pick a random letter to substitute letters a-x with,
+        // without allowing a letter to be assigned to itself
         for (char letter = 'a'; letter <= 'x'; letter++) {
             if (characterSet.contains(letter)) {
                 characterSet.remove(letter);
@@ -96,7 +116,9 @@ public class Cipher {
                 characterSet.remove(pick);
             }
         }
-
+        
+        // If y or z are remaining in the character set, 
+        // ensure that y and z are not assigned themselves
         if (characterSet.contains('y')) {
             // z gets y, y gets the other
             characterSet.remove('y');
@@ -115,6 +137,7 @@ public class Cipher {
             cipher += pick;
             cipher += remaining[(randomIndex + 1) % 2];
         }
+        // return cipher string
         return cipher;
     }
 
