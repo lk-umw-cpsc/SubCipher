@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
@@ -106,16 +107,16 @@ public class MainFrame extends JFrame {
         // process running, which is bad practice unless you need to catch
         // the user pressing the close button, i.e. for saving purposes)
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Prevent the user from resizing the window (try commenting this out for fun)
-        setResizable(false);
+        // Prevent the user from resizing the window (try uncommenting this)
+        // setResizable(false);
 
         // Resize the window so it can fit all of its child components
         pack();
 
-        // Prevent the text fields from resizing (they will by default)
-        cipherField.setMaximumSize(cipherField.getSize());
-        plaintextField.setMaximumSize(plaintextField.getSize());
-        ciphertextField.setMaximumSize(ciphertextField.getSize());
+        // Prevent the text fields from resizing vertically (they will by default)
+        cipherField.setMaximumSize(new Dimension(Integer.MAX_VALUE, cipherField.getHeight()));
+        plaintextField.setMaximumSize(new Dimension(Integer.MAX_VALUE, plaintextField.getHeight()));
+        ciphertextField.setMaximumSize(new Dimension(Integer.MAX_VALUE, ciphertextField.getHeight()));
 
         // Make the buttons do something when they're clicked by adding
         // ActionListeners to each of them (the function after the :: is
