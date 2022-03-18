@@ -3,7 +3,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
@@ -16,6 +18,8 @@ public class MainFrame extends JFrame {
     private JButton generateButton;
     private JButton encryptButton;
     private JButton decryptButton;
+
+    private Box invalidCipherLayer;
 
     public MainFrame() {
         super("Sub Cipher by Lauren");
@@ -50,6 +54,14 @@ public class MainFrame extends JFrame {
             layer = Box.createHorizontalBox();
             layer.add(cipherField = new JTextField(26));
             layer.add(Box.createHorizontalGlue());
+            layeredPane.add(layer);
+
+            layer = invalidCipherLayer = Box.createHorizontalBox();
+            layer.add(new JLabel("Please enter a valid cipher"));
+            layer.add(Box.createHorizontalGlue());
+            layer.setBackground(Color.ORANGE);
+            layer.setBorder(new LineBorder(Color.RED));
+            layer.setVisible(false);
             layeredPane.add(layer);
             
             // Make the next layer a horizontally-centered button
@@ -133,15 +145,44 @@ public class MainFrame extends JFrame {
 
     private void generatePressed(ActionEvent e) {
         cipherField.setText(Cipher.generate());
+        if (invalidCipherLayer.isVisible()) {
+            invalidCipherLayer.setVisible(false);
+            pack();
+        }
     }
 
     private void encryptPressed(ActionEvent e) {
-        Cipher cipher = new Cipher(cipherField.getText());
+        Cipher cipher;
+        try {
+            cipher = new Cipher(cipherField.getText());
+        } catch (IllegalArgumentException exc) {
+            if (!invalidCipherLayer.isVisible()) {
+                invalidCipherLayer.setVisible(true);
+                pack();
+            }
+            return;
+        }
+        if (invalidCipherLayer.isVisible()) {
+            invalidCipherLayer.setVisible(false);
+            pack();
+        }
         ciphertextField.setText(cipher.encrypt(plaintextField.getText()));
     }
 
     private void decryptPressed(ActionEvent e) {
-        Cipher cipher = new Cipher(cipherField.getText());
+        Cipher cipher;
+        try {
+            cipher = new Cipher(cipherField.getText());
+        } catch (IllegalArgumentException exc) {
+            if (!invalidCipherLayer.isVisible()) {
+                invalidCipherLayer.setVisible(true);
+                pack();
+            }            return;
+        }
+        if (invalidCipherLayer.isVisible()) {
+            invalidCipherLayer.setVisible(false);
+            pack();
+        }
         plaintextField.setText(cipher.decrypt(ciphertextField.getText()));
     }
     

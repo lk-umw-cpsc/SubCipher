@@ -1,10 +1,14 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class Cipher {
+    private static final Random rng = new Random();
 
     private Map<Character, Character> encryptMap;
     private Map<Character, Character> decryptMap;
@@ -68,15 +72,42 @@ public class Cipher {
     }
     
     public static String generate() {
-        String set = "abcdefghijklmnopqrstuvwxyz";
-        String shuffled = "";
-        List<Character> l = new ArrayList<Character>();
-        for (char c : set.toCharArray())
-            l.add(c);
-        Collections.shuffle(l);
-        for (char c : l)
-            shuffled += c;
-        return shuffled;
+        Set<Character> characterSet = new HashSet<>();
+        for (char letter = 'a'; letter <= 'z'; letter++) {
+            characterSet.add(letter);
+        }
+        String cipher = "";
+        for (char letter = 'a'; letter <= 'x'; letter++) {
+            if (characterSet.contains(letter)) {
+                characterSet.remove(letter);
+                Object[] remaining = characterSet.toArray();
+                Object pick = remaining[rng.nextInt(remaining.length)];
+                cipher += pick;
+                characterSet.add(letter);
+                characterSet.remove(pick);
+            } else {
+                Object[] remaining = characterSet.toArray();
+                Object pick = remaining[rng.nextInt(remaining.length)];
+                cipher += pick;
+                characterSet.remove(pick);
+            }
+        }
+        if (characterSet.contains('y')) {
+            characterSet.remove('y');
+            cipher += characterSet.toArray()[0];
+            cipher += 'y';
+        } else if (characterSet.contains('z')) {
+            characterSet.remove('z');
+            cipher += 'z';
+            cipher += characterSet.toArray()[0];
+        } else {
+            Object[] remaining = characterSet.toArray();
+            int randomIndex = rng.nextInt(remaining.length);
+            Object pick = remaining[randomIndex];
+            cipher += pick;
+            cipher += remaining[(randomIndex + 1) % 2];
+        }
+        return cipher;
     }
 
 }
