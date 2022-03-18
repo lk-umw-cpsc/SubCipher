@@ -27,15 +27,18 @@ public class Cipher {
         encryptMap = new HashMap<>();
         decryptMap = new HashMap<>();
 
+        // We should have 26 letters
         if (cipher.length() != 26) {
             throw new IllegalArgumentException("Expected full alphabet");
         }
 
         for (int i = 0, length = cipher.length(); i < length; i++) {
             char c = cipher.charAt(i);
+            // We should only have lowercase letters a-z
             if (!(c >= 'a' && c <= 'z')) {
                 throw new IllegalArgumentException("Expected only lower case letters");
             }
+            // We should not have any duplicate letters
             if (decryptMap.containsKey(c)) {
                 throw new IllegalArgumentException("Cipher contained duplicate letter");
             }
