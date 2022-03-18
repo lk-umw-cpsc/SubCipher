@@ -154,10 +154,7 @@ public class MainFrame extends JFrame {
         // Generate a new cipher and place it in the cipher field
         cipherField.setText(Cipher.generate());
         // Hide the invalid cipher error message if it's currently showing
-        if (invalidCipherLayer.isVisible()) {
-            invalidCipherLayer.setVisible(false);
-            pack();
-        }
+        hideInvalidCipherErrorMessage();
     }
 
     private void encryptPressed(ActionEvent e) {
@@ -167,17 +164,11 @@ public class MainFrame extends JFrame {
         try {
             cipher = new Cipher(cipherField.getText());
         } catch (IllegalArgumentException exc) {
-            if (!invalidCipherLayer.isVisible()) {
-                invalidCipherLayer.setVisible(true);
-                pack();
-            }
+            showInvalidCipherErrorMessage();
             return;
         }
         // Encryption was successful. Hide the invalid cipher field if visible
-        if (invalidCipherLayer.isVisible()) {
-            invalidCipherLayer.setVisible(false);
-            pack();
-        }
+        hideInvalidCipherErrorMessage();
         // Place the output in the ciphertextfield
         ciphertextField.setText(cipher.encrypt(plaintextField.getText()));
     }
@@ -189,19 +180,29 @@ public class MainFrame extends JFrame {
         try {
             cipher = new Cipher(cipherField.getText());
         } catch (IllegalArgumentException exc) {
-            if (!invalidCipherLayer.isVisible()) {
-                invalidCipherLayer.setVisible(true);
-                pack();
-            }            return;
+            showInvalidCipherErrorMessage();
+            return;
         }
         // Decryption was successful; hide the invalid cipher error message
         // if it's showing
-        if (invalidCipherLayer.isVisible()) {
-            invalidCipherLayer.setVisible(false);
-            pack();
-        }
+        hideInvalidCipherErrorMessage();
         // Place output in the plaintext field
         plaintextField.setText(cipher.decrypt(ciphertextField.getText()));
     }
     
+    private void hideInvalidCipherErrorMessage() {
+        if (invalidCipherLayer.isVisible()) {
+            invalidCipherLayer.setVisible(false);
+            // Resize the window to reflect changes
+            pack();
+        }
+    }
+
+    private void showInvalidCipherErrorMessage() {
+        if (!invalidCipherLayer.isVisible()) {
+            invalidCipherLayer.setVisible(true);
+            // Resize the window to reflect changes
+            pack();
+        }
+    }
 }
