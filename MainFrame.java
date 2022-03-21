@@ -26,20 +26,19 @@ public class MainFrame extends JFrame {
     // Error message layer (displays when invalid cipher is given)
     private Box invalidCipherLayer;
 
+    /**
+     * Creates a window that can be used to encrypt and decrypt text using
+     * a substitution cipher. Also allows the user to generate substitution
+     * ciphers.
+     */
     public MainFrame() {
         // Set window title
         super("Substitution Cipher by Lauren");
         // Close the app when the user clicks the X button
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Prevent the user from resizing the window (try commenting this out)
-        // setResizable(false);
-    }
+        setResizable(false);
 
-    /**
-     * Builds this MainFrame's components, centers the frame on the screen,
-     * and makes the frame visible.
-     */
-    public void createAndShow() {
         /**
          * Components are added to the frame in layers.
          * 
@@ -66,15 +65,10 @@ public class MainFrame extends JFrame {
         // Where all of our layers will go
         Box verticalLayerContainer = Box.createVerticalBox();
 
-        // Surround verticalLayerContainer with horizontal glue and some padding
-        // The glue has the effect of horizontally centering the vertical layer
-        // container. This occurs because the horizontal glues change size
-        // while the layer container does not.
-        horizontallyPaddedContainer.add(Box.createHorizontalGlue());
+        // Surround verticalLayerContainer with some padding.
         horizontallyPaddedContainer.add(Box.createHorizontalStrut(PADDING));
         horizontallyPaddedContainer.add(verticalLayerContainer);
         horizontallyPaddedContainer.add(Box.createHorizontalStrut(PADDING));
-        horizontallyPaddedContainer.add(Box.createHorizontalGlue());
 
         // Start the layer container with some padding between the window title bar
         // and the first layer
@@ -97,7 +91,10 @@ public class MainFrame extends JFrame {
         // Create a the next layer: a layer that starts out hidden,
         // but will be made visible when the user attempts to encrypt/decrypt
         // with an invalid cypher
+        // Layer contains a center-aligned label
         layer = invalidCipherLayer = Box.createHorizontalBox();
+            // center align by adding glue before *and* after component
+            layer.add(Box.createHorizontalGlue());
             JLabel errorLabel = new JLabel("Please enter a valid cipher");
             // Red font
             errorLabel.setForeground(Color.RED);
@@ -151,6 +148,7 @@ public class MainFrame extends JFrame {
         add(horizontallyPaddedContainer);
 
         // Resize the window so it can fit all of its child components
+        // pack must be done before the next few lines!
         pack();
 
         // Prevent the text fields from resizing vertically (they will by default)
@@ -167,8 +165,6 @@ public class MainFrame extends JFrame {
 
         // Center the window on the user's desktop
         setLocationRelativeTo(null);
-        // Show the window.
-        setVisible(true);
     }
 
     /**
