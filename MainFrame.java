@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
 
+    // Number of pixels of padding placed between window frame and child components
+    private static final int PADDING = 16;
+
     // Text fields
     private JTextField cipherField;
     private JTextField plaintextField;
@@ -25,109 +28,127 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         // Set window title
-        super("Sub Cipher by Lauren");
+        super("Substitution Cipher by Lauren");
+        // Close the app when the user clicks the X button
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Prevent the user from resizing the window (try commenting this out)
+        // setResizable(false);
     }
 
     /**
-     * Builds this MainFrame's children, centers the frame on the screen,
+     * Builds this MainFrame's components, centers the frame on the screen,
      * and makes the frame visible.
      */
     public void createAndShow() {
-        // Main panel will lay its children out horizontally (left to right)
-        Box pane = Box.createHorizontalBox();
-        // The next pane is our "main" pane; horizontal layers will be added to it
-        // This panel lays its children out vertically, top to bottom
-        // in the order that they're added
-        Box layeredPane = Box.createVerticalBox();
-        // Center-align layeredPane by adding horizontal glue before
-        // (and later after) it
-        pane.add(Box.createHorizontalGlue());
-        // Create a minimum 10px padding between the left window border and the
-        // layeredPane
-        pane.add(Box.createHorizontalStrut(10));
-            // Add 10 px of padding between the top of the window and the
-            // first layer
-            layeredPane.add(Box.createVerticalStrut(10));
-            // Define the first layer, a left-aligned label with the text
-            // "Cipher:". This layer lays its children out left to right
-            Box layer = Box.createHorizontalBox();
+        /**
+         * Components are added to the frame in layers.
+         * 
+         * A layer is a horizontal box, created by Box.createHorizontalBox().
+         * 
+         * Layers, by nature of being horizontal Boxes, display their children
+         * left to right, in the order they're added in.
+         * 
+         * Layers are added to verticalLayerContainer, a vertical Box created
+         * by Box.createVerticalBox(). Layers are displayed top to bottom, in
+         * the order they were added in.
+         * 
+         * Finally, the verticalLayerContainer is wrapped in another
+         * horizontal Box, for the sake of placing padding around the components.
+         * 
+         * This way of creating UIs is a little more time consuming, but allows
+         * for finer-grained control over the behavior of components, such as
+         * aligning certain components left/right/center, adding space between
+         * them, etc.
+         */
+
+        // Box which will house verticalLayerContainer
+        Box horizontallyPaddedContainer = Box.createHorizontalBox();
+        // Where all of our layers will go
+        Box verticalLayerContainer = Box.createVerticalBox();
+
+        // Surround verticalLayerContainer with horizontal glue and some padding
+        // The glue has the effect of horizontally centering the vertical layer
+        // container. This occurs because the horizontal glues change size
+        // while the layer container does not.
+        horizontallyPaddedContainer.add(Box.createHorizontalGlue());
+        horizontallyPaddedContainer.add(Box.createHorizontalStrut(PADDING));
+        horizontallyPaddedContainer.add(verticalLayerContainer);
+        horizontallyPaddedContainer.add(Box.createHorizontalStrut(PADDING));
+        horizontallyPaddedContainer.add(Box.createHorizontalGlue());
+
+        // Start the layer container with some padding between the window title bar
+        // and the first layer
+        verticalLayerContainer.add(Box.createVerticalStrut(PADDING));
+
+        // Start the first layer: a left-aligned label that says "Cipher:"
+        Box layer = Box.createHorizontalBox();
             layer.add(new JLabel("Cipher:"));
-            // align label left by adding glue to the right of it
+            // Left-align by adding glue after the label
             layer.add(Box.createHorizontalGlue());
-            // Add this layer to the layer pane
-            layeredPane.add(layer);
+        verticalLayerContainer.add(layer);
 
-            // Same as above but a text field
-            layer = Box.createHorizontalBox();
+        // Star the next layer: a text field that will contain the cipher
+        // Note that JTextFields resize vertically *and* horizontally by default,
+        // making glue useless unless you use setMaximumSize to limit their growth.
+        layer = Box.createHorizontalBox();
             layer.add(cipherField = new JTextField(26));
-            layer.add(Box.createHorizontalGlue());
-            layeredPane.add(layer);
+        verticalLayerContainer.add(layer);
 
-            layer = invalidCipherLayer = Box.createHorizontalBox();
+        // Create a the next layer: a layer that starts out hidden,
+        // but will be made visible when the user attempts to encrypt/decrypt
+        // with an invalid cypher
+        layer = invalidCipherLayer = Box.createHorizontalBox();
             JLabel errorLabel = new JLabel("Please enter a valid cipher");
+            // Red font
             errorLabel.setForeground(Color.RED);
             layer.add(errorLabel);
+            // left-align the label with some glue
             layer.add(Box.createHorizontalGlue());
+            // Start the layer hidden
             layer.setVisible(false);
-            layeredPane.add(layer);
-            
-            // Make the next layer a horizontally-centered button
-            // with the text "Generate"
-            layer = Box.createHorizontalBox();
+        verticalLayerContainer.add(layer);
+        
+        // Next layer is a right-aligned button for generating the cypher
+        layer = Box.createHorizontalBox();
+            // right align by adding horizontal glue *before* the component
+            layer.add(Box.createHorizontalGlue());
             layer.add(generateButton = new JButton("Generate"));
-            layeredPane.add(layer);
+        verticalLayerContainer.add(layer);
 
-            // Make the next layer a left-aligned label
-            layer = Box.createHorizontalBox();
+        // Next layer is another left-aligned label
+        layer = Box.createHorizontalBox();
             layer.add(new JLabel("Plaintext:"));
             layer.add(Box.createHorizontalGlue());
-            layeredPane.add(layer);
+        verticalLayerContainer.add(layer);
 
-            // Another left-aligned text field layer
-            layer = Box.createHorizontalBox();
+        // Next layer is a text field
+        layer = Box.createHorizontalBox();
             layer.add(plaintextField = new JTextField(26));
-            layer.add(Box.createHorizontalGlue());
-            layeredPane.add(layer);
+        verticalLayerContainer.add(layer);
 
-            // Another left-aligned label layer
-            layer = Box.createHorizontalBox();
+        // Another left-aligned label
+        layer = Box.createHorizontalBox();
             layer.add(new JLabel("Ciphertext:"));
             layer.add(Box.createHorizontalGlue());
-            layeredPane.add(layer);
+        verticalLayerContainer.add(layer);
 
-            // Another text field label
-            layer = Box.createHorizontalBox();
+        // another text field
+        layer = Box.createHorizontalBox();
             layer.add(ciphertextField = new JTextField(26));
-            layer.add(Box.createHorizontalGlue());
-            layeredPane.add(layer);
+        verticalLayerContainer.add(layer);
 
-            // Add a final layer with two buttons, one aligned left
-            // and the other aligned right
-            // This alignment is achieved by adding glue between the
-            // two buttons (the glue resizes while the buttons don't)
-            layer = Box.createHorizontalBox();
+        // Last layer left-aligns one button while right-aligning the other
+        // This is possible by placing horizontal glue *between* the two
+        // components
+        layer = Box.createHorizontalBox();
             layer.add(encryptButton = new JButton("Encrypt"));
             layer.add(Box.createHorizontalGlue());
             layer.add(decryptButton = new JButton("Decrypt"));
-            layeredPane.add(layer);
-            layeredPane.add(Box.createVerticalStrut(10));
-        // Finally, add the layered pane to the main pane
-        pane.add(layeredPane);
-        // Add another 10px of padding, but to the right edge this time
-        pane.add(Box.createHorizontalStrut(10));
-        // Allow the space between the content and border to resize with glue
-        pane.add(Box.createHorizontalGlue());
+            verticalLayerContainer.add(layer);
+        verticalLayerContainer.add(Box.createVerticalStrut(PADDING));
 
-        // Add the pane to the window
-        add(pane);
-
-        // Set window's closing behavior to exit the program
-        // (Default behavior is to simply hide the window and keep the
-        // process running, which is bad practice unless you need to catch
-        // the user pressing the close button, i.e. for saving purposes)
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Prevent the user from resizing the window (try commenting this out)
-        setResizable(false);
+        // Finally, add everything we just made to the frame
+        add(horizontallyPaddedContainer);
 
         // Resize the window so it can fit all of its child components
         pack();
@@ -150,6 +171,10 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Method called when the Decrypt button is pressed.
+     * @param e Event information passed by Swing.
+     */
     private void generatePressed(ActionEvent e) {
         // Generate a new cipher and place it in the cipher field
         cipherField.setText(SubstitutionCipher.generate());
@@ -157,6 +182,10 @@ public class MainFrame extends JFrame {
         hideInvalidCipherErrorMessage();
     }
 
+    /**
+     * Method called when the Encrypt button is pressed.
+     * @param e Event information passed by Swing
+     */
     private void encryptPressed(ActionEvent e) {
         // Attempt to encrypt; if an invalid cipher is given,
         // display an error message instead.
@@ -173,6 +202,10 @@ public class MainFrame extends JFrame {
         ciphertextField.setText(cipher.encrypt(plaintextField.getText()));
     }
 
+    /**
+     * Method called when Decrypt button is pressed
+     * @param e Event information from Swing
+     */
     private void decryptPressed(ActionEvent e) {
         // Attempt to decrypt; if an invalid cypher is given,
         // display an error message instead
@@ -190,6 +223,9 @@ public class MainFrame extends JFrame {
         plaintextField.setText(cipher.decrypt(ciphertextField.getText()));
     }
     
+    /**
+     * Hides the "Please enter a valid cipher" error message
+     */
     private void hideInvalidCipherErrorMessage() {
         if (invalidCipherLayer.isVisible()) {
             invalidCipherLayer.setVisible(false);
@@ -198,6 +234,9 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Displays the "Please enter a valid cipher" error message
+     */
     private void showInvalidCipherErrorMessage() {
         if (!invalidCipherLayer.isVisible()) {
             invalidCipherLayer.setVisible(true);
