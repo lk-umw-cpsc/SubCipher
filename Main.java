@@ -4,7 +4,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+    public static void main(String[] args) {
         // attempt to reskin Swing to look like the user's OS
         if (!setLookAndFeel())
             System.out.println("Note: user's system does not support L&F");
